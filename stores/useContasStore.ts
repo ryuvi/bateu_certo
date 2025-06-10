@@ -29,7 +29,7 @@ type ContasState = {
 export const useContasStore = create<ContasState>()(
   persist(
     (set, get) => ({
-      contas: contas,
+      contas: /* contas */[],
 
       adicionar: (conta) =>
         set((state) => ({

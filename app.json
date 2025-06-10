@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "minhas_contas",
-    "slug": "minhas_contas",
+    "name": "Bateu Certo",
+    "slug": "bateu_certo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -21,7 +21,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.indexcore.bateu_certo"
     },
     "web": {
       "bundler": "metro",

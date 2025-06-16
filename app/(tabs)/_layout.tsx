@@ -25,6 +25,7 @@ export default function Layout() {
         headerTitleAlign: "center",
         headerTintColor: theme.colors.onSurface, // cor do texto do header
       }}
+      initialRouteName="resumo"
     >
       <Tabs.Screen
         name="index"
@@ -45,6 +46,16 @@ export default function Layout() {
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="graficos"
+        options={{
+          title: "Graficos",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="bar-chart" size={size} color={color} />
+          ),
+        }}
+        />
     </Tabs>
   );
 }

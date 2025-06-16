@@ -9,6 +9,7 @@ export type Conta = {
   id: string
   nome: string
   categoria: string
+  grupo: 'Fixa' | 'Variável' | 'Extra' | 'Lazer' | 'Outros'
   valor: number
   pago: boolean
   desconto?: number
@@ -29,7 +30,7 @@ type ContasState = {
 export const useContasStore = create<ContasState>()(
   persist(
     (set, get) => ({
-      contas: /* contas */[],
+      contas: contas/* [] */,
 
       adicionar: (conta) =>
         set((state) => ({

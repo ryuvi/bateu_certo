@@ -5,30 +5,28 @@ import { useContas } from "@stores/useContasStore";
 import { useTheme } from "react-native-paper";
 import { formatValue } from "@/constants/Funcs";
 
-export function ResumoPizza() {
+export function ResumoPizzaPorGrupo() {
   const contas = useContas();
   const { colors } = useTheme();
   const screenWidth = Dimensions.get("window").width;
 
-  // Estado para armazenar a fatia selecionada para tooltip
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const data = useMemo(() => {
-    const categoriaMap = new Map<string, number>();
+    // Agrupa valores pelo campo 'grupo'
+    const grupoMap = new Map<string, number>();
 
-    contas.forEach(({ categoria, valor }) => {
-      categoriaMap.set(categoria, (categoriaMap.get(categoria) || 0) + valor);
+    contas.forEach(({ grupo, valor }) => {
+      grupoMap.set(grupo, (grupoMap.get(grupo) || 0) + valor);
     });
 
-    const entries = Array.from(categoriaMap.entries());
-
-    // soma total para cálculo de percentual
+    const entries = Array.from(grupoMap.entries());
     const total = entries.reduce((acc, [, value]) => acc + value, 0);
 
-    return entries.map(([categoria, value], index) => ({
-      name: categoria,
+    return entries.map(([grupo, value], index) => ({
+      name: grupo,
       population: value,
-      color: generateColorFromString(categoria, index),
+      color: generateColorFromString(grupo, index),
       legendFontColor: colors.onBackground,
       legendFontSize: 14,
       percentage: total ? (value / total) * 100 : 0,
@@ -38,12 +36,11 @@ export function ResumoPizza() {
   if (data.length === 0) {
     return (
       <View style={styles.emptyContainer}>
-        <Text style={{ color: colors.onBackground }}>Nenhuma conta para mostrar</Text>
+        <Text style={{ color: colors.onBackground }}>Nenhum gasto para mostrar</Text>
       </View>
     );
   }
 
-  // Renderiza legenda customizada
   const renderLegend = () => (
     <View style={styles.legendContainer}>
       {data.map((item, i) => (
@@ -63,7 +60,7 @@ export function ResumoPizza() {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.title, { color: colors.primary }]}>Gastos por Categoria</Text>
+      <Text style={[styles.title, { color: colors.primary }]}>Gastos por Grupo</Text>
 
       <PieChart
         data={data}
@@ -78,13 +75,12 @@ export function ResumoPizza() {
         backgroundColor="transparent"
         paddingLeft="15"
         absolute={false}
-        hasLegend={false} // ocultar legenda padrão
-        avoidFalseZero // evita zero sendo mostrado
-        style={{ justifyContent: 'center', alignItems: 'center', marginHorizontal: 'auto' }}
+        hasLegend={false}
+        avoidFalseZero
         center={[15,0]}
+        style={{justifyContent: "center", alignItems: "center", marginHorizontal: 'auto'}}
       />
 
-      {/* Tooltip customizado (mostra info da fatia selecionada) */}
       {selectedIndex !== null && (
         <View style={[styles.tooltip, { borderColor: data[selectedIndex].color }]}>
           <Text style={{ color: colors.onBackground, fontWeight: "bold" }}>
@@ -101,7 +97,6 @@ export function ResumoPizza() {
   );
 }
 
-// Gera cor baseada no texto e index, garantindo mais variação
 function generateColorFromString(text: string, index: number) {
   const baseHue = Array.from(text).reduce((acc, char) => acc + char.charCodeAt(0), 0) + index * 40;
   const hue = baseHue % 360;

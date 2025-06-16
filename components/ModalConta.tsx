@@ -20,9 +20,9 @@ import {
   Chip,
   HelperText,
 } from 'react-native-paper';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 type Frequencia = 'único' | 'mensal' | 'anual' | 'semanal';
+type Grupo = 'Fixa' | 'Variável' | 'Extra' | 'Lazer' | 'Outros';
 
 type Props = {
   visible: boolean;
@@ -32,6 +32,7 @@ type Props = {
 };
 
 const categorias = ['Alimentação', 'Aluguel', 'Internet', 'Transporte', 'Outros'];
+const grupos: Grupo[] = ['Fixa', 'Variável', 'Extra', 'Lazer', 'Outros'];
 const frequencias: Frequencia[] = ['único', 'mensal', 'anual', 'semanal'];
 
 export const ModalConta = ({ visible, onClose, onSave, contaEdit }: Props) => {
@@ -39,6 +40,7 @@ export const ModalConta = ({ visible, onClose, onSave, contaEdit }: Props) => {
 
   const [nome, setNome] = useState('');
   const [categoria, setCategoria] = useState(categorias[0]);
+  const [grupo, setGrupo] = useState<Grupo>(grupos[0]);
   const [valor, setValor] = useState('');
   const [pago, setPago] = useState(false);
   const [desconto, setDesconto] = useState('');
@@ -70,6 +72,7 @@ export const ModalConta = ({ visible, onClose, onSave, contaEdit }: Props) => {
     if (contaEdit) {
       setNome(contaEdit.nome);
       setCategoria(contaEdit.categoria);
+      setGrupo(contaEdit.grupo ?? grupos[0]);
       setValor(contaEdit.valor.toString());
       setPago(contaEdit.pago);
       setDesconto(contaEdit.desconto?.toString() ?? '');
@@ -78,6 +81,7 @@ export const ModalConta = ({ visible, onClose, onSave, contaEdit }: Props) => {
     } else {
       setNome('');
       setCategoria(categorias[0]);
+      setGrupo(grupos[0]);
       setValor('');
       setPago(false);
       setDesconto('');
@@ -102,6 +106,7 @@ export const ModalConta = ({ visible, onClose, onSave, contaEdit }: Props) => {
       id: contaEdit?.id,
       nome: nome.trim(),
       categoria,
+      grupo,
       valor: Number(valor),
       pago,
       desconto: desconto ? Number(desconto) : undefined,
@@ -140,6 +145,20 @@ export const ModalConta = ({ visible, onClose, onSave, contaEdit }: Props) => {
                     style={styles.chip}
                   >
                     {cat}
+                  </Chip>
+                ))}
+              </View>
+
+              <Text style={styles.label}>Grupo</Text>
+              <View style={styles.chipsRow}>
+                {grupos.map((g) => (
+                  <Chip
+                    key={g}
+                    selected={grupo === g}
+                    onPress={() => setGrupo(g)}
+                    style={styles.chip}
+                  >
+                    {g}
                   </Chip>
                 ))}
               </View>
@@ -194,9 +213,7 @@ export const ModalConta = ({ visible, onClose, onSave, contaEdit }: Props) => {
                     selected={frequencia === freq}
                     onPress={() => setFrequencia(freq)}
                     style={styles.chip}
-                    icon={
-                      frequencia === freq ? 'check-bold' : undefined
-                    }
+                    icon={frequencia === freq ? 'check-bold' : undefined}
                   >
                     {freq}
                   </Chip>

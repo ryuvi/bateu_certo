@@ -1,16 +1,15 @@
 import React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import { Divider, useTheme } from "react-native-paper";
-import {  useContas } from "@stores/useContasStore";
+import { Button, Divider, useTheme } from "react-native-paper";
+import { useContas } from "@stores/useContasStore";
 import { formatDate, formatValue } from "@constants/Funcs";
 
-import { ResumoPizza } from "@components/CategoriaGrafico";
+import { exportarContasParaCSV } from "@/utils/csv";
 
 export default function ResumoFinanceiro() {
   const contas = useContas();
   const { colors } = useTheme();
   const styles = getStyles(colors);
-
 
   const totalAPagar = contas.reduce(
     (acc, c) => (c.pago ? acc : acc + c.valor),
@@ -25,7 +24,15 @@ export default function ResumoFinanceiro() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.card}>
-        <ResumoPizza />
+        {/* Botão de exportar */}
+        <Button
+          icon="file-export"
+          mode="contained"
+          onPress={() => exportarContasParaCSV(contas)}
+          style={{ marginTop: 24 }}
+        >
+          Exportar para CSV
+        </Button>
       </View>
       <View style={styles.card}>
         <Text style={styles.label}>Total a Pagar:</Text>
@@ -44,7 +51,7 @@ export default function ResumoFinanceiro() {
         <Text
           style={{
             ...styles.value,
-            color: totalAPagar < totalPago ? colors.error : colors.primary,
+            color: "#50FA7B",
           }}
         >
           {formatValue(totalPago)}
@@ -69,7 +76,9 @@ export default function ResumoFinanceiro() {
                   </Text>
                 </View>
               </View>
-              <Divider style={{ backgroundColor: colors.primary, marginVertical: 5 }} />
+              <Divider
+                style={{ backgroundColor: colors.primary, marginVertical: 5 }}
+              />
             </View>
           ))
         )}
